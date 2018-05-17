@@ -2,13 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Counter from '../components/Counter';
-import { State } from '../store/modules';
 import { counterActions } from '../store/modules/counter';
+import { State } from '../store/modules';
 
 interface CounterContainerProps {
   number: number;
   CounterActions: typeof counterActions;
 }
+
 class CounterContainer extends React.Component<CounterContainerProps> {
   public handleIncrease = () => {
     this.props.CounterActions.increment(1);

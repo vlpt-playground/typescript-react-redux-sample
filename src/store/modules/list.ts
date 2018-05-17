@@ -1,7 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import produce from 'immer';
 
-interface Info {
+export interface Info {
   text: string;
   id: number;
 }
@@ -19,6 +19,7 @@ const insert = createAction<Info, string>(INSERT, (text: string) => {
   id += 1;
   return info;
 });
+
 const setInput = createAction<string, string>(SET_INPUT, (text: string) => text);
 
 export const listActions = {
@@ -43,8 +44,7 @@ const reducer = handleActions<ListState, any>(
   {
     [SET_INPUT]: (state, action: SetInputAction) => {
       return produce(state, draft => {
-        if (!action.payload) return;
-        draft.input = action.payload;
+        draft.input = action.payload || '';
       });
     },
     [INSERT]: (state, action: InsertAction) => {
