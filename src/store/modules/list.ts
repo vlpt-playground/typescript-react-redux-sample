@@ -11,24 +11,20 @@ const INSERT = 'list/INSERT';
 
 let id = 0;
 
-const insert = createAction<Info, string>(INSERT, (text: string) => {
-  const info: Info = {
-    id,
-    text,
-  };
-  id += 1;
-  return info;
-});
-
-const setInput = createAction<string, string>(SET_INPUT, (text: string) => text);
-
 export const listActions = {
-  insert,
-  setInput,
+  insert: createAction<Info, string>(INSERT, (text: string) => {
+    const info: Info = {
+      id,
+      text,
+    };
+    id += 1;
+    return info;
+  }),
+  setInput: createAction<string, string>(SET_INPUT, (text: string) => text),
 };
 
-type InsertAction = ReturnType<typeof insert>;
-type SetInputAction = ReturnType<typeof setInput>;
+type InsertAction = ReturnType<typeof listActions.insert>;
+type SetInputAction = ReturnType<typeof listActions.setInput>;
 
 export type ListState = {
   list: Info[];

@@ -3,13 +3,11 @@ import produce from 'immer';
 
 const INCREMENT = 'counter/INCREMENT';
 
-const increment = createAction<number, number>(INCREMENT, diff => diff);
-
 export const counterActions = {
-  increment,
+  increment: createAction<number, number>(INCREMENT, diff => diff),
 };
 
-type IncrementAction = ReturnType<typeof increment>;
+type IncrementAction = ReturnType<typeof counterActions.increment>;
 
 export type CounterState = {
   number: number;
