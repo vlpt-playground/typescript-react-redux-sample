@@ -1,15 +1,17 @@
 import * as React from 'react';
 
 interface CounterProps {
-  number: number;
-  onIncrease: () => void;
+  value: number;
+  onIncrease(): void;
+  onDecrease(): void;
 }
 
-const Counter: React.SFC<CounterProps> = ({ number, onIncrease }) => {
+const Counter: React.SFC<CounterProps> = ({ value, onIncrease, onDecrease }) => {
   return (
     <div>
-      <h1>{number}</h1>
-      <button onClick={onIncrease}>INCREMENT!</button>
+      <h1>{value}</h1>
+      <button onClick={onIncrease}>+</button>
+      <button onClick={onDecrease}>-</button>
     </div>
   );
 };

@@ -1,15 +1,13 @@
 import * as React from 'react';
-import { listActions, Info } from '../store/modules/list';
-import List from '../components/List';
 import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import List from '../components/List';
 import { State } from '../store/modules';
-import { bindActionCreators } from 'redux';
+import { listActions } from '../store/modules/list';
 
-interface ListContainerProps {
-  ListActions: typeof listActions;
-  input: string;
-  list: Info[];
-}
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+type ListContainerProps = StateProps & DispatchProps;
 
 class ListContainer extends React.Component<ListContainerProps> {
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,12 +27,16 @@ class ListContainer extends React.Component<ListContainerProps> {
   }
 }
 
+const mapStateToProps = ({ list }: State) => ({
+  input: list.input,
+  list: list.list,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  ListActions: bindActionCreators(listActions, dispatch),
+});
+
 export default connect(
-  ({ list }: State) => ({
-    input: list.input,
-    list: list.list,
-  }),
-  dispatch => ({
-    ListActions: bindActionCreators(listActions, dispatch),
-  })
+  mapStateToProps,
+  mapDispatchToProps
 )(ListContainer);

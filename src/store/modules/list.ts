@@ -1,18 +1,20 @@
-import { createAction, handleActions } from 'redux-actions';
 import produce from 'immer';
-
-export interface Info {
-  text: string;
-  id: number;
-}
+import { createAction, handleActions } from 'redux-actions';
 
 const SET_INPUT = 'list/SET_INPUT';
 const INSERT = 'list/INSERT';
 
-let id = 0;
+let id = 0; // 나중에 배열 렌더링 시 key 로 사용 될 고유 값
+
+export type Info = {
+  text: string;
+  id: number;
+};
 
 export const listActions = {
-  insert: createAction<Info, string>(INSERT, (text: string) => {
+  // createAction<Payload 타입, ...액션 생성함수의 파라미터들>
+  setInput: createAction<string, string>(SET_INPUT, text => text),
+  insert: createAction<Info, string>(INSERT, text => {
     const info: Info = {
       id,
       text,
@@ -20,11 +22,10 @@ export const listActions = {
     id += 1;
     return info;
   }),
-  setInput: createAction<string, string>(SET_INPUT, (text: string) => text),
 };
 
-type InsertAction = ReturnType<typeof listActions.insert>;
 type SetInputAction = ReturnType<typeof listActions.setInput>;
+type InsertAction = ReturnType<typeof listActions.insert>;
 
 export type ListState = {
   list: Info[];
@@ -36,21 +37,24 @@ const initialState: ListState = {
   input: '',
 };
 
-const reducer = handleActions<ListState, any>(
-  {
-    [SET_INPUT]: (state, action: SetInputAction) => {
-      return produce(state, draft => {
-        draft.input = action.payload || '';
-      });
-    },
-    [INSERT]: (state, action: InsertAction) => {
-      return produce(state, draft => {
-        if (!action.payload) return;
-        draft.list.push(action.payload);
-      });
-    },
+// handleActions<StateType, PayloadType>
+const reducer = handleActions<ListState, any>({
+  [SET_INPUT]: (state, action: SetInputAction) => {
+    return produce(state, draft => {
+      if (action.payload === undefined) { 
+        return;
+      }
+      draft.input = action.payload;
+    });
   },
-  initialState
-);
+  [INSERT]: (state, action: InsertAction) => {
+    return produce(state, draft => {
+      if (!action.payload) { 
+        return;
+      }
+      draft.list.push(action.payload);
+    });
+  }
+}, initialState);
 
 export default reducer;
